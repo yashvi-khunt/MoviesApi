@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using MoviesApi.Filters;
 using MoviesApi.Services;
 
@@ -18,14 +19,14 @@ namespace MoviesApi
             }).AddXmlDataContractSerializerFormatters();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(typeof(Program).Assembly);
+            builder.Services.AddTransient<IFileStorageService, InAppStorageService>();
+            builder.Services.AddHttpContextAccessor();
+
+            //add db context
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-            builder.Services.AddSingleton<IRepository, InMemoryRepository>();
-            builder.Services.AddResponseCaching();
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
-
-            //action filter
-            builder.Services.AddTransient<MyActionFilter>(); builder.Services.AddTransient<Microsoft.Extensions.Hosting.IHostedService, WriteToFileHostedService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -42,7 +43,7 @@ namespace MoviesApi
 
             app.UseRouting();
 
-            app.UseResponseCaching();
+            app.UseStaticFiles();
             app.UseAuthentication();
 
             app.UseAuthorization();
