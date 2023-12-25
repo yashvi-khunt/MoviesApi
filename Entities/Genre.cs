@@ -11,5 +11,7 @@ namespace MoviesApi.Entities
         [StringLength(40)]
         [FirstLetterUppercase]
         public string Name { get; set; }
+
+        public List<MoviesGenres> MoviesGenres { get; set; }
     }
 }

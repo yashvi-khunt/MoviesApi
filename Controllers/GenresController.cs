@@ -43,9 +43,7 @@ namespace MoviesApi.Controllers
 
             if (genre == null)
             {
-
                 return NotFound();
-
             }
 
             var genreDTO = mapper.Map<GenreDTO>(genre);
